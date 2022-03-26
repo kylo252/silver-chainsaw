@@ -3,7 +3,7 @@ name: plugins-version-bump
 on:
   workflow_dispatch:
   schedule:
-    - cron: "50 14 * * 3,6"
+    - cron: "*/5 * * * 6"
 
 jobs:
   plugins-version-bump:
@@ -11,18 +11,16 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
 
       - name: run upgrade script
-        run: echo "foo" > bar
+        run: date > bar
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT }}
           branch: update-plugins
           commit-message: "chore: bump plugins version"
           title: "chore: bump plugins version"
