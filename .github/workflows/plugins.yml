@@ -1,0 +1,37 @@
+name: plugins-version-bump
+
+on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: false
+        default: 'warning'
+        type: choice
+        options:
+        - info
+        - warning
+        - debug
+  schedule:
+    - cron: "02 15 * * 0,2"
+
+jobs:
+  plugins-version-bump:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: run upgrade script
+        run: echo "foo" > bar
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "chore: bump plugins version"
+          commit-message: "chore: bump plugins version"
+          author: Github Actions <actions@github>
