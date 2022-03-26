@@ -13,17 +13,18 @@ on:
         - warning
         - debug
   schedule:
-    - cron: "8 14 * * *"
+    - cron: "*/10 * * * *"
 
 jobs:
   plugins-version-bump:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.head_ref }}
 
       - name: run upgrade script
         run: echo "foo" > bar
@@ -34,4 +35,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "chore: bump plugins version"
           commit-message: "chore: bump plugins version"
-          author: Github Actions <actions@github>
+          # author: Github Actions <actions@github>
