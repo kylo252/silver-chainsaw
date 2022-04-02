@@ -17,16 +17,12 @@ jobs:
       - name: run upgrade script
         run: date > bar
 
-      - name: Configure git user
-        run: |
-          git config user.email 'github-action@users.noreply.github.com'
-          git config user.name 'GitHub Action'
-
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: updates
+          author: Github Action <github-action@users.noreply.github.com>
           commit-message: "chore(plugins): bump version"
           title: "chore(plugins): bump version"
           body: |
