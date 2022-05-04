@@ -32,6 +32,7 @@ jobs:
       - name: run upgrade script
         shell: pwsh
         run: |
+          $env:PATH = "C:\msys64\mingw64\bin;$env:PATH"
           Get-Command -Name make -ErrorAction Ignore
           Get-Command -Name ninja -ErrorAction Ignore
           Get-Command -Name cmake -ErrorAction Ignore
