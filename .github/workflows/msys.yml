@@ -23,11 +23,11 @@ jobs:
       - if: matrix.config == 'MINGW_64-gcov'
         uses: msys2/setup-msys2@v2
         with:
-          msystem: mingw64
           update: true
-          pacboy: >-
-            cmake:p
-            ninja:p
+          install: >-
+            make
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
 
       - name: run upgrade script
         shell: pwsh
