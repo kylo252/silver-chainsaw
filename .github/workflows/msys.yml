@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        config: [ 'MINGW_64-gcov', 'MSVC_64' ]
+        config: [ 'MINGW_64-gcov' ]
     name: windows (${{ matrix.config }})
     steps:
       - uses: actions/checkout@v2
@@ -25,14 +25,11 @@ jobs:
         with:
           update: true
           install: >-
-            git
-            gperf
             mingw-w64-x86_64-ninja
-            mingw-w64-x86_64-cmake
-            mingw-w64-x86_64-diffutils
 
       - name: run upgrade script
+        shell: pwsh
         run: >-
-          powershell Get-Command -Name make
-          powershell Get-Command -Name ninja
-          powershell Get-Command -Name mingw-w64-x86_64-ninja
+          Get-Command -Name make -ErrorAction Ignore;
+          Get-Command -Name ninja -ErrorAction Ignore;
+          Get-Command -Name mingw-w64-x86_64-ninja -ErrorAction Ignore;
