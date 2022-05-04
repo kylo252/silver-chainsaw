@@ -15,11 +15,24 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        config: [ "MINGW_64-gcov", "MSVC_64" ]
+        config: [ 'MINGW_64-gcov', 'MSVC_64' ]
     name: windows (${{ matrix.config }})
     steps:
       - uses: actions/checkout@v2
 
+      - if: matrix.config == 'MINGW_64-gcov'
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: >-
+            git
+            gperf
+            mingw-w64-x86_64-ninja
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-diffutils
+
       - name: run upgrade script
-        run: date
-        if: matrix.config == "MINGW_64-gcov"
+        run: >-
+          powershell Get-Command -Name make
+          powershell Get-Command -Name ninja
+          powershell Get-Command -Name mingw-w64-x86_64-ninja
