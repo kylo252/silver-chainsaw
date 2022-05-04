@@ -29,12 +29,20 @@ jobs:
             mingw-w64-x86_64-cmake
             mingw-w64-x86_64-ninja
 
-      - name: run upgrade script
+      - name: run on pwsh
         shell: pwsh
         run: |
           $MINGW_PREFIX = (& msys2 -c 'cygpath -w /') + "mingw64\bin"
           $env:PATH = "$MINGW_PREFIX;$env:PATH"
-          Write-Output "project(foo)" | Out-File CMakeLists.txt
           Get-Command -Name cmake
           [Environment]::GetEnvironmentVariables()
+          Write-Output "project(foo)" | Out-File CMakeLists.txt
+          cmake -LA .
+          git clean -qfdx
+
+      - name: run on msys
+        shell: msys2 {0}
+        run: |
+          echo $PATH
+          echo "project(foo)" > CMakeLists.txt
           cmake -LA .
