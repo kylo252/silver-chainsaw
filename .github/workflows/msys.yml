@@ -1,0 +1,25 @@
+name: msys
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-2019
+    timeout-minutes: 45
+    env:
+      DEPS_BUILD_DIR: ${{ format('{0}/nvim-deps', github.workspace) }}
+      DEPS_PREFIX: ${{ format('{0}/nvim-deps/usr', github.workspace) }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config: [ 'MINGW_64-gcov', 'MSVC_64' ]
+    name: windows (${{ matrix.config }})
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: run upgrade script
+        run: date
+        if: matrix.config == 'MINGW_64-gcov'
