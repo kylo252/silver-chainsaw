@@ -25,14 +25,16 @@ jobs:
         with:
           update: true
           install: >-
-            make
+            mingw-w64-x86_64-make
             mingw-w64-x86_64-cmake
             mingw-w64-x86_64-ninja
 
       - name: run upgrade script
         shell: pwsh
         run: |
-          $env:PATH = "C:\msys64\mingw64\bin;$env:PATH"
-          Get-Command -Name make -ErrorAction Ignore
-          Get-Command -Name ninja -ErrorAction Ignore
-          Get-Command -Name cmake -ErrorAction Ignore
+          $MINGW_PREFIX = (& msys2 -c 'cygpath -w /') + "mingw64\bin"
+          $env:PATH = "$MINGW_PREFIX;$env:PATH"
+          Write-Output "project(foo)" | Out-File CMakeLists.txt
+          Get-Command -Name cmake
+          [Environment]::GetEnvironmentVariables()
+          cmake -LA .
