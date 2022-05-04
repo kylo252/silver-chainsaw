@@ -15,11 +15,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        config: [ 'MINGW_64-gcov', 'MSVC_64' ]
+        config: [ "MINGW_64-gcov", "MSVC_64" ]
     name: windows (${{ matrix.config }})
     steps:
       - uses: actions/checkout@v2
 
       - name: run upgrade script
         run: date
-        if: matrix.config == 'MINGW_64-gcov'
+        if: matrix.config == "MINGW_64-gcov"
