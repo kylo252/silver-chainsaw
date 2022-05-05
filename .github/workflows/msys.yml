@@ -25,7 +25,7 @@ jobs:
         with:
           update: true
           install: >-
-            mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-gcc
             mingw-w64-x86_64-cmake
             mingw-w64-x86_64-ninja
 
@@ -37,7 +37,7 @@ jobs:
           Get-Command -Name cmake
           [Environment]::GetEnvironmentVariables()
           Write-Output "project(foo)" | Out-File CMakeLists.txt
-          cmake -LA .
+          cmake -G Ninja -LA .
           git clean -qfdx
 
       - name: run on msys
@@ -45,4 +45,4 @@ jobs:
         run: |
           echo $PATH
           echo "project(foo)" > CMakeLists.txt
-          cmake -LA .
+          cmake -G Ninja -LA .
