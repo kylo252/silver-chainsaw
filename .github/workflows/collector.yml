@@ -1,0 +1,25 @@
+name: Collector Command
+on:
+  repository_dispatch:
+    types: [collector-command]
+jobs:
+  helloWorld:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update comment
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
+          body: |
+            >pong ${{ github.event.client_payload.slash_command.args.all }}
+            >
+            got
+            ${{ github.event.client_payload.slash_command.command }}
+            ${{ github.event.client_payload.slash_command.args.all }}
+            ${{ github.event.client_payload.slash_command.args.unnamed.all }}
+            ${{ github.event.client_payload.slash_command.args.unnamed.arg1 }}
+            ${{ github.event.client_payload.slash_command.args.unnamed.arg2 }}
+            ${{ github.event.client_payload.slash_command.args.named.region }}
+            ${{ github.event.client_payload.slash_command.args.named.branch }}
+            ${{ github.event.client_payload.slash_command.args.named.reason }}
+          reaction-type: hooray
