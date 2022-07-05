@@ -1,0 +1,17 @@
+name: results
+
+on:
+  workflow_dispatch:
+  push:
+  # schedule:
+  #   - cron: "*/10 10-14 * * *"
+jobs:
+  publish-results:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: "results/**/*.xml"
