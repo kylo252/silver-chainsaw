@@ -1,0 +1,116 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "base",
+      "displayName": "base preset",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true,
+        "CMAKE_TOOLCHAIN_FILE": {
+          "value": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+          "type": "FILEPATH"
+        }
+      },
+      "environment": {
+        "LOG_DIR": "${sourceDir}/build/${presetName}/logs",
+        "VCPKG_ROOT": "$env{XDG_DATA_HOME}/vcpkg"
+      },
+      "hidden": true
+    },
+    {
+      "name": "release",
+      "displayName": "Release",
+      "description": "Same as RelWithDebInfo, but disables debug information",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      },
+      "inherits": [
+        "base"
+      ]
+    },
+    {
+      "name": "relwithdebinfo",
+      "displayName": "RelWithDebInfo",
+      "description": "Enables optimizations (-Og or -O2) with debug information",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      },
+      "inherits": [
+        "base"
+      ]
+    },
+    {
+      "name": "debug",
+      "displayName": "Debug",
+      "description": "Disables optimizations (-O0), enables debug information",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      },
+      "inherits": [
+        "base"
+      ]
+    },
+    {
+      "name": "win-x64",
+      "displayName": "Windows MSVC x64 (/w VS2019)",
+      "generator": "Visual Studio 17 2022",
+      "architecture": {
+        "value": "x64",
+        "strategy": "set"
+      },
+      "cacheVariables":{
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_TOOLCHAIN_FILE": {
+          "value": "$env{VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake",
+          "type": "FILEPATH"
+        }
+      },
+      "inherits": "base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "win-ninja-x64",
+      "displayName": "Windows x64 (/w Ninja)",
+      "generator": "Ninja",
+      "cacheVariables":{
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      },
+      "inherits": "base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "debug",
+      "configurePreset": "debug"
+    },
+    {
+      "name": "release",
+      "configurePreset": "release"
+    },
+    {
+      "name": "win-x64",
+      "configurePreset": "win-x64",
+      "nativeToolOptions": [
+        "/verbosity:normal",
+        "/m"
+      ]
+    },
+    {
+      "name": "win-ninja-x64",
+      "configurePreset": "win-ninja-x64"
+    }
+  ]
+}
+
+

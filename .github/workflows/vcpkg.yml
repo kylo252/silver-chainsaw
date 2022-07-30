@@ -1,0 +1,52 @@
+name: vcpkg
+
+on:
+  push:
+    branches:
+      - "vcpkg-test"
+
+jobs:
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 45
+    name: vcpkg-test
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: switch vcpkg branch
+        shell: pwsh
+        run: |
+          cd $env:VCPKG_INSTALLATION_ROOT
+          git remote add fork https://github.com/kylo252/vcpkg
+          git fetch --all
+          git switch add-tree-sitter
+
+      - name: test vcpkg
+        shell: pwsh
+        run: |
+          vcpkg version
+          vcpkg search tree-sitter
+
+      - name: install ts
+        shell: pwsh
+        run: |
+          vcpkg install tree-sitter:x64-windows --debug
+          $prefix = "$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows"
+          Get-ChildItem -Path "$prefix\bin"
+          Get-ChildItem -Path "$prefix\lib"
+
+      - name: view ts artifacts
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          $prefix = "$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows"
+          $ProgressPreference = 'SilentlyContinue'
+          Get-Content -Path $prefix\share\tree-sitter\* -Filter *.cmake
+          Get-Content -Path $prefix\share\unofficial-tree-sitter\* -Filter *.cmake
+          Write-Host ">>>> pkgconfig"
+          Get-Content -Path "$prefix\lib\pkgconfig\tree-sitter.pc"
+
+      - name: cmake trial
+        shell: pwsh
+        run: |
+          cmake -LA -S . --preset=win-x64
