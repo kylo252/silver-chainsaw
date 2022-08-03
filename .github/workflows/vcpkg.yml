@@ -8,7 +8,7 @@ on:
 jobs:
   windows:
     runs-on: windows-2022
-    timeout-minutes: 45
+    timeout-minutes: 8
     name: vcpkg-test
     steps:
       - uses: actions/checkout@v2
@@ -31,22 +31,11 @@ jobs:
         shell: pwsh
         run: |
           vcpkg install tree-sitter:x64-windows --debug
-          $prefix = "$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows"
-          Get-ChildItem -Path "$prefix\bin"
-          Get-ChildItem -Path "$prefix\lib"
-
-      - name: view ts artifacts
-        shell: pwsh
-        continue-on-error: true
-        run: |
-          $prefix = "$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows"
-          $ProgressPreference = 'SilentlyContinue'
-          Get-Content -Path $prefix\share\tree-sitter\* -Filter *.cmake
-          Get-Content -Path $prefix\share\unofficial-tree-sitter\* -Filter *.cmake
-          Write-Host ">>>> pkgconfig"
-          Get-Content -Path "$prefix\lib\pkgconfig\tree-sitter.pc"
 
       - name: cmake trial
         shell: pwsh
         run: |
+          $vsPath = vswhere.exe -latest -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          Import-Module (Join-Path $vsPath "Common7\Tools\Microsoft.VisualStudio.DevShell.dll")
+          Enter-VsDevShell -VsInstallPath $vsPath -SkipAutomaticLocation
           cmake -LA -S . --preset=win-x64
